@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import './question.dart';
-import './answer.dart';
+import 'package:flutter_quiz_app/result.dart';
+import './quiz.dart';
+import './result.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -16,43 +17,47 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  final _questions = const [
+    {
+      'questionText': 'what\'s your favorite color?',
+      'answers': ['Black', 'Blue', 'White', 'Yellow'],
+    },
+    {
+      'questionText': 'what\'s your favorite animal?',
+      'answers': ['Zebra', 'Cat', 'Dog', 'Snake'],
+    },
+    {
+      'questionText': 'what\'s your favorite language?',
+      'answers': ['Python', 'C++', 'Java', 'Dart'],
+    }
+  ];
+
   var _questionIndex = 0;
 
   void _answerQuestion() {
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
+
+    if (_questionIndex < _questions.length) {
+      print('We have more questions!');
+    } else {
+      print('No more questions!');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      {
-        'questionText': 'what\'s your favorite color?',
-        'answer': ['Black', 'Blue', 'White', 'Yellow'],
-      },
-      {
-        'questionText': 'what\'s your favorite animal?',
-        'answer': ['Zebra', 'Cat', 'Dog', 'Snake'],
-      },
-      {
-        'questionText': 'what\'s your favorite language?',
-        'answer': ['Python', 'C++', 'Java', 'Dart'],
-      }
-    ];
-
     return MaterialApp(
         home: Scaffold(
-      appBar: AppBar(
-        title: Text('My first App'),
-      ),
-      body: Column(
-        children: [
-          Question(questions[_questionIndex]['questionText'] as String),
-          //callback 함수로써, Answer버튼 누르면 _answerQuestion을 호출
-          //questions.map((question) => null)
-        ],
-      ),
-    ));
+            appBar: AppBar(
+              title: Text('My first App'),
+            ),
+            body: _questionIndex < _questions.length
+                ? Quiz(
+                    answerQuestion: _answerQuestion,
+                    questionIndex: _questionIndex,
+                    questions: _questions)
+                : Result()));
   }
 }
